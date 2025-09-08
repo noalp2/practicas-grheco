@@ -1,0 +1,11 @@
+name: dna-seq
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+dependencies:
+  - multiqc
+  - fastqc
+  - fastp
+  - bowtie2
+  - varscan  

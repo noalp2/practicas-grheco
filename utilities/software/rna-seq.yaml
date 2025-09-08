@@ -1,0 +1,10 @@
+name: rna-seq
+channels:
+  - conda-forge
+  - defaults
+  - bioconda
+dependencies:
+  - multiqc
+  - fastqc
+  - fastp
+  - salmon 
