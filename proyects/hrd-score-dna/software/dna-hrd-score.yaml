@@ -1,0 +1,17 @@
+name: dna-hrd-score
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - bwa-mem2
+  - gatk4
+  - samtools
+  - htslib
+  - fastp
+  - r-base
+  - r-sequenza
+  - r-data.table
+  - r-devtools
+  - pip:
+    - sequenza-utils
