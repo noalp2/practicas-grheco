@@ -1,0 +1,10 @@
+name: trimeado
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - fastqc
+  - fastp
+  - multiqc
+  - snakemake
