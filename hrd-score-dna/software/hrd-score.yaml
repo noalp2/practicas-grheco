@@ -1,0 +1,9 @@
+name: hrd-score
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - r-base
+  - r-sequenza
+  - r-data.table
+  - r-devtools

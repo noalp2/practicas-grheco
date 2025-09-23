@@ -1,0 +1,9 @@
+name: sequenza
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3.8.5
+  - pip:
+    - sequenza-utils

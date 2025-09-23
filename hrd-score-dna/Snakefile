@@ -1,0 +1,112 @@
+SAMPLES =["LC_15", "LC_19"]
+TYPE =["C", "N"]
+
+localrules: all, multiqc, align, varscan, gc_wiggle
+
+rule all:
+    input:
+        expand("results/trimmed/{S}_{T}_trimmed_{N}.fastq.gz", S=SAMPLES, T=TYPE, N=["1","2"]),
+        expand("results/alineado/{S}_{T}.bam", S=SAMPLES, T=TYPE),
+        expand("results/snp_indel/{S}.snp.vcf", S=SAMPLES),
+        expand("results/snp_indel/{S}.indel.vcf", S=SAMPLES),
+        expand("results/sequenza/{S}.small.seqz.gz", S=SAMPLES),
+        expand("results/{S}_hrd_score.txt", S=SAMPLES)
+
+rule trim:
+    input:
+        r1 = "data/{S}_{T}_1.fastq.gz",
+        r2 = "data/{S}_{T}_2.fastq.gz"
+    output:
+        r1 = "results/trimmed/{S}_{T}_trimmed_1.fastq.gz",
+        r2 = "results/trimmed/{S}_{T}_trimmed_2.fastq.gz"
+    resources:
+        mem_mb=8000,
+        runtime=360,
+        cpus_per_task=4,
+        account="othcxnlp"
+    shell:
+        """
+        module load cesga/system miniconda3/22.11.1-1
+        PS1="test"
+        conda activate trimeado
+        fastp -i {input.r1} -I {input.r2} -q 20 --cut_front --cut_tail -o {output.r1} -O {output.r2}
+        fastqc -o results/trimmed/fastqc results/trimmed/*fastq.gz
+        conda deactivate
+        """
+rule multiqc:
+    input:
+        expand("results/trimmed/fastqc/{S}_{T}_trimmed_1_fastqc.html", S=SAMPLES, T=TYPE),
+        expand("results/trimmed/fastqc/{S}_{T}_trimmed_2_fastqc.html", S=SAMPLES, T=TYPE)
+    output:
+        "results/multiqc_report.html"
+    shell:
+        """
+        module load cesga/system miniconda3/22.11.1-1
+        PS1="test"
+        conda activate trimeado
+        multiqc results/trimmed/fastqc -o results/trimmed
+        conda deactivate
+        """
+rule align:
+    input: 
+        r1 = "results/trimmed/{S}_{T}_trimmed_1.fastq.gz",
+        r2 = "results/trimmed/{S}_{T}_trimmed_2.fastq.gz",
+        index = "../../minigenome/minigenome_index"
+    output:
+	    "results/alineado/{S}_{T}.bam"
+    shell:
+        """
+        module load cesga/system miniconda3/22.11.1-1
+        PS1="test"
+        conda activate align
+        bowtie2 -x {input.index} -1 {input.r1} -2 {input.r2} | samtools view -bS - | samtools sort -o {output}
+        conda deactivate
+        """
+rule gc_wiggle:
+    input:
+        ref = "../../utilities/minigenome/minigenome.fa"
+    output:
+        gc = "../../utilities/minigenome/minigenome.gc50.wig.gz"
+    shell:
+        """
+        module load cesga/system miniconda3/22.11.1-1
+        PS1="test"
+        conda activate sequenza
+        sequenza-utils gc_wiggle -f {input.ref} -w 50 -o {output.gc}
+        conda deactivate
+        """
+rule sequenza:
+    input:
+        normal = "results/alineado/{S}_N.bam",
+        tumor = "results/alineado/{S}_C.bam",
+        ref = "../../utilities/minigenome/minigenome.fa",
+        gc = "../../utilities/minigenome/minigenome.gc50.wig.gz"
+    output:
+        seqz = "results/sequenza/{S}.small.seqz.gz"
+    resources:
+        mem_mb=8000,
+        runtime=360,
+        cpus_per_task=4,
+        account="othcxnlp"
+    shell:
+        """
+        module load cesga/system miniconda3/22.11.1-1
+        PS1="test"
+        conda activate sequenza
+        sequenza-utils bam2seqz -n {input.normal} -t {input.tumor} --fasta {input.ref} -gc {input.gc} -o results/sequenza/{wildcards.S}.seqz.gz
+        sequenza-utils seqz_binning --seqz results/sequenza/{wildcards.S}.seqz.gz --window 50 -o {output.seqz}
+        conda deactivate
+        """
+rule hrd-score:
+    input:
+        "results/sequenza/{S}.small.seqz.gz"
+    output:
+        "results/{S}_hrd_score.txt"
+    shell:
+        """
+        module load cesga/system miniconda3/22.11.1-1
+        PS1="test"
+        conda activate hrd-score
+
+        """
+
