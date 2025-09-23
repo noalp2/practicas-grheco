@@ -1,0 +1,12 @@
+name: rsem
+channels:
+  - bioconda
+  - conda-forge
+  - defaults
+dependencies:
+  - rsem
+  - samtools
+  - htslib
+  - perl-Env
+  
+
