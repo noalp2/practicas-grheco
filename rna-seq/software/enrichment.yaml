@@ -1,0 +1,8 @@
+name: enrichmentR
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - r-base=4.3.2
+  - r-pathfindr=2.4.0
