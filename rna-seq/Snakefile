@@ -4,9 +4,8 @@ localrules: all, hisat2
 
 rule all:
 	input:
-		expand("results/trimmed/{S}_trimmed_{N}.fastq.gz", S=SAMPLES, N=["1","2"]),
-		expand("results/align/{S}.bam", S=SAMPLES),
-		expand("results/rsem/{S}.genes.results", S=SAMPLES)
+		#expand("results/trimmed/{S}_trimmed_{N}.fastq.gz", S=SAMPLES, N=["1","2"]),
+		expand("results/salmon/{S}", S=SAMPLES)
 rule trim:
 	input:
 		r1 = "data_rna/{S}_1.fastq.gz",
@@ -35,38 +34,24 @@ rule fastqc:
 	shell:
 		"""
 		module load cesga/system miniconda3/22.11.1-1
-		PS1="test"
 		conda activate trimeado
 		fastqc -o {output} {input}
 		conda deactivate
 		"""
-rule hisat2:
-	input:
-		r1 = "results/trimmed/{S}_trimmed_1.fastq.gz",
-		r2 = "results/trimmed/{S}_trimmed_2.fastq.gz"
-	output:
-		"results/align/{S}.bam"
-	shell:
-		"""
-		module load cesga/system miniconda3/22.11.1-1
+rule salmon:
+    input:
+        r1 = "results/trimmed/{S}_trimmed_1.fastq.gz",
+        r2 = "results/trimmed/{S}_trimmed_2.fastq.gz"
+    output:
+        directory("results/salmon/{S}")
+    resources:
+        mem_mb=8000,
+        runtime=1080,
+        cpus_per_task=4,
+        account="othcxnlp"
+    shell:
+        """
+        module load cesga/2020 gcc/system salmon/1.10.2
         PS1="test"
-		conda activate hisat2
-		hisat2 -x minigenome/minigenome_index -1 {input.r1} -2 {input.r2} | samtools view -bS - | samtools sort -o {output}
-		conda deactivate
-		"""
-rule rsem:
-	input:
-		"results/align/{S}.bam"
-	output:
-		"results/rsem/{S}.genes.results"
-	resources:
-		mem_mb=8000,
-		runtime=360,
-		cpus_per_task=4,
-		account="othcxnlp"
-	shell:
-		"""
-		module load cesga/2020 gcc/system rsem/1.3.1
-		PS1="test"
-		rsem-calculate-expression --alignments {input} minigenome/rsem_ref2 results/rsem/{wildcards.S}
-		"""
+        salmon quant -i ../utilities/salmon_index -l A -1 {input.r1} -2 {input.r2} -p {resources.cpus_per_task} --validateMappings -o {output}
+        """
