@@ -1,6 +1,6 @@
-curl -L https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/GRCh38.primary_assembly.genome.fa.gz -o utilities/reference_genomes_dna/GRCh38.primary_assembly.genome.gtf.gz
-gunzip utilities/reference_genomes_dna/GRCh38.primary_assembly.genome.gtf.gz
-curl -L https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_44/gencode.v44.annotation.gtf.gz -o utilities/reference_genomes_rna/gencode.v44.annotation.gtf.gz
-gunzip utilities/reference_genomes_rna/gencode.v44.annotation.gtf.gz
-mv utilities/reference_genomes_dna/GRCh38.primary_assembly.genome.gtf utilities/reference_genomes_rna
-
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/GRCh38.primary_assembly.genome.fa.gz
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.transcripts.fa.gz
+wget https://ftp.ebi.ac.uk/pub/databases/gencode/Gencode_human/release_49/gencode.v49.primary_assembly.basic.annotation.gtf.gz
+mv GRCh38.primary_assembly.genome.fa.gz ../../utilities/GRCh38.primary_asembly_reference_genome.fa.gz
+mv gencode.v49.transcripts.fa.gz ../../utilities/GCRh38.primary_asembly_reference_transcripts.fa.gz
+mv gencode.v49.primary_assembly.basic.annotation.gtf.gz ../../utilities/GCRh38_primary_assembly_reference_annotation.gtf.gz
