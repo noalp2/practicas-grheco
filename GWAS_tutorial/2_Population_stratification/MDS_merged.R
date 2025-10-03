@@ -1,5 +1,4 @@
 #MDS PLOT
-
 data<- read.table(file="MDS_merge2.mds",header=TRUE)
 race<- read.table(file="racefile.txt",header=TRUE)
 datafile<- merge(data,race,by=c("IID","FID"))

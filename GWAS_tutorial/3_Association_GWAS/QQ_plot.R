@@ -1,5 +1,4 @@
 #QQ PLOT
-
 library("qqman") 
 results_log <- read.table("logistic_results.assoc_2.logistic", head=TRUE)
 jpeg("QQ-Plot_logistic.jpeg")

@@ -6,7 +6,6 @@
 # area flagged with WINDOW PEOPLE. If you can go around that, then you can
 # make PRSice work (though I have not debug PRSice executable in window)
 
-
 # Remove annoying messages ------------------------------------------------
 #options(error = quote({dump.frames(to.file=TRUE); q()}))
 In_Regression <-
