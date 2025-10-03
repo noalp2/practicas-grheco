@@ -9,6 +9,7 @@
 
 # Remove annoying messages ------------------------------------------------
 #options(error = quote({dump.frames(to.file=TRUE); q()}))
+#options(warn=-1)
 In_Regression <-
     DEC <-
     Coef <-

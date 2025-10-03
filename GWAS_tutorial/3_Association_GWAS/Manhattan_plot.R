@@ -1,3 +1,4 @@
+#MANHATTAN PLOT
 library("qqman")  
 results_log <- read.table("logistic_results.assoc_2.logistic", head=TRUE)
 jpeg("Logistic_manhattan.jpeg")
