@@ -1,4 +1,5 @@
 #MISSINGNESS
+
 indmiss<-read.table(file="plink.imiss", header=TRUE)
 snpmiss<-read.table(file="plink.lmiss", header=TRUE)
 # read data into R 

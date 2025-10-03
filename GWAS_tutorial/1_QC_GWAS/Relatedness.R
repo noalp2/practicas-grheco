@@ -1,4 +1,5 @@
 #RELATEDNESS
+
 pdf("relatedness.pdf")
 relatedness = read.table("pihat_min0.2.genome", header=T)
 par(pch=16, cex=1)

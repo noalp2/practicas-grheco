@@ -1,4 +1,5 @@
 #HWE
+
 hwe<-read.table (file="plink.hwe", header=TRUE)
 pdf("histhwe.pdf")
 hist(hwe[,9],main="Histogram HWE")
