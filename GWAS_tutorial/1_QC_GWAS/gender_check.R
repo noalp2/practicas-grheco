@@ -1,5 +1,4 @@
 #GENDER
-
 gender <- read.table("plink.sexcheck", header=T,as.is=T)
 
 pdf("Gender_check.pdf")
